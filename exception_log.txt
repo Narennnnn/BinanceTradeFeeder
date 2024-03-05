@@ -1,0 +1,42 @@
+Exception details:
+2024-03-05 11:53:55.770857 - Error while extracting and inserting D:\Tonnochy\binance-public-data\python\data\futures\um\daily\klines\BTCUSDT\1h\2024-02-25_2024-02-28\BTCUSDT-1h-2024-02-25.zip: duplicate key value violates unique constraint "klinedata_pkey"
+DETAIL:  Key (open_time)=(1708819200000) already exists.
+
+Traceback (most recent call last):
+  File "C:\Users\maury\PycharmProjects\BinanceTradeFeeder\main.py", line 67, in extract_and_insert_zip
+    cursor.execute(insert_query, (open_time,close_time,open,high,low,close,quote_volume,volume,count,taker_buy_volume,taker_buy_quote_volume,ignore))
+psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "klinedata_pkey"
+DETAIL:  Key (open_time)=(1708819200000) already exists.
+
+
+
+Exception details:
+2024-03-05 11:53:55.775858 - Error while extracting and inserting D:\Tonnochy\binance-public-data\python\data\futures\um\daily\klines\BTCUSDT\1h\2024-02-25_2024-02-28\BTCUSDT-1h-2024-02-26.zip: current transaction is aborted, commands ignored until end of transaction block
+
+Traceback (most recent call last):
+  File "C:\Users\maury\PycharmProjects\BinanceTradeFeeder\main.py", line 67, in extract_and_insert_zip
+    cursor.execute(insert_query, (open_time,close_time,open,high,low,close,quote_volume,volume,count,taker_buy_volume,taker_buy_quote_volume,ignore))
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+
+
+Exception details:
+2024-03-05 11:53:55.778995 - Error while extracting and inserting D:\Tonnochy\binance-public-data\python\data\futures\um\daily\klines\BTCUSDT\1h\2024-02-25_2024-02-28\BTCUSDT-1h-2024-02-27.zip: current transaction is aborted, commands ignored until end of transaction block
+
+Traceback (most recent call last):
+  File "C:\Users\maury\PycharmProjects\BinanceTradeFeeder\main.py", line 67, in extract_and_insert_zip
+    cursor.execute(insert_query, (open_time,close_time,open,high,low,close,quote_volume,volume,count,taker_buy_volume,taker_buy_quote_volume,ignore))
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+
+
+Exception details:
+2024-03-05 11:53:55.782121 - Error while extracting and inserting D:\Tonnochy\binance-public-data\python\data\futures\um\daily\klines\BTCUSDT\1h\2024-02-25_2024-02-28\BTCUSDT-1h-2024-02-28.zip: current transaction is aborted, commands ignored until end of transaction block
+
+Traceback (most recent call last):
+  File "C:\Users\maury\PycharmProjects\BinanceTradeFeeder\main.py", line 67, in extract_and_insert_zip
+    cursor.execute(insert_query, (open_time,close_time,open,high,low,close,quote_volume,volume,count,taker_buy_volume,taker_buy_quote_volume,ignore))
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+
+
