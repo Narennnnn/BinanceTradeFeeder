@@ -40,7 +40,6 @@ def print_zip_files(directory):
         return []
 
 
-# Function to extract and insert the contents of a zip file into the database
 def extract_and_insert_zip(zip_file, connection, cursor):
     try:
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
@@ -49,27 +48,34 @@ def extract_and_insert_zip(zip_file, connection, cursor):
                     # Read the CSV file using pandas
                     df = pd.read_csv(file)
 
-                    # Insert data into the database
-                    for index, row in df.iterrows():
-                        open_time = int(row['open_time'])
-                        close_time=row['close_time']
-                        open=float(row['open'])
-                        high=float(row['close'])
-                        low=float(row['low'])
-                        close=float(row['close'])
-                        quote_volume=float(row['quote_volume'])
-                        volume=row['volume']
-                        count=row['count']
-                        taker_buy_volume=row['taker_buy_volume']
-                        taker_buy_quote_volume=row['taker_buy_quote_volume']
-                        ignore=row['ignore']
-                        insert_query = f"INSERT INTO {table_name} (open_time, close_time,open,high,low,close,quote_volume,volume,count,taker_buy_volume,taker_buy_quote_volume,ignore) VALUES (%s, %s, %s, %s,%s, %s,%s, %s,%s, %s,%s, %s)"
-                        cursor.execute(insert_query, (open_time,close_time,open,high,low,close,quote_volume,volume,count,taker_buy_volume,taker_buy_quote_volume,ignore))
+                    # Begin a new transaction
+                    connection.autocommit = False  # Ensure autocommit is disabled for manual transaction control
 
-            connection.commit()
+                    try:
+                        # Insert data into the database
+                        for index, row in df.iterrows():
+                            open_time = int(row['open_time'])
+                            close_time = row['close_time']
+                            open = float(row['open'])
+                            high = float(row['close'])
+                            low = float(row['low'])
+                            close = float(row['close'])
+                            quote_volume = float(row['quote_volume'])
+                            volume = row['volume']
+                            count = row['count']
+                            taker_buy_volume = row['taker_buy_volume']
+                            taker_buy_quote_volume = row['taker_buy_quote_volume']
+                            ignore = row['ignore']
+                            insert_query = f"INSERT INTO {table_name} (open_time, close_time, open, high, low, close, quote_volume, volume, count, taker_buy_volume, taker_buy_quote_volume, ignore) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                            cursor.execute(insert_query, (open_time, close_time, open, high, low, close, quote_volume, volume, count, taker_buy_volume, taker_buy_quote_volume, ignore))
+                        connection.commit()  # Commit the transaction
+                    except Exception as e:
+                        connection.rollback()  # Rollback in case of error
+                        log_exception(f"Error while inserting data from {zip_file}: {e}")
             print(f"Successfully extracted and inserted contents from {zip_file}")
     except Exception as e:
         log_exception(f"Error while extracting and inserting {zip_file}: {e}")
+
 
 
 # Create the initial PostgreSQL connection
