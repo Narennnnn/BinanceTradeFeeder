@@ -14,7 +14,7 @@ database = "postgres"
 table_name = "TradesHistorical"
 #base_directory is where I have downloaded zip locally from date 25 feb to 28 feb for testing using Binance-Public-Data repo
 base_directory = r"D:\Tonnochy\binance-public-data\python\data\futures\um\daily"
-# List of coins
+# List of coins we need to these also ADAUSDT BTCUSDT ETHUSDT XRPUSDT SOLUSDT DOGEUSDT USDM
 coins = ["ADAUSDT", "BTCUSDT"]
 
 # Function to log exceptions to a text file
@@ -40,10 +40,6 @@ def print_zip_files(directory):
 
 def find_closest_aggr_trade_timestamp(aggr_df, closetime):
     return aggr_df['transact_time'].iloc[(aggr_df['transact_time'] - closetime).abs().idxmin()]
-
-def find_kline_data(aggr_df, timestamp):
-    kline_data = aggr_df.loc[aggr_df['transact_time'] == timestamp]
-    return kline_data['open_time'].values[0], kline_data['low'].values[0], kline_data['high'].values[0], kline_data['open'].values[0], kline_data['close'].values[0], kline_data['quote_volume'].values[0]
 
 def extract_and_insert_trades_historical(aggr_zip_file, klines_zip_file, coin, connection, cursor):
     try:
