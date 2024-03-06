@@ -4,6 +4,7 @@ import zipfile
 from datetime import datetime
 import traceback
 import psycopg2.extras
+import numpy as np
 
 # Connection details
 host = "localhost"
@@ -12,10 +13,11 @@ user = "postgres"
 password = "pass"
 database = "postgres"
 table_name = "TradesHistorical"
-#base_directory is where I have downloaded zip locally from date 25 feb to 28 feb for testing using Binance-Public-Data repo
+# base_directory is where I have downloaded zip locally from date 25 feb to 28 feb for testing using Binance-Public-Data repo
 base_directory = r"D:\Tonnochy\binance-public-data\python\data\futures\um\daily"
 # List of coins we need to these also ADAUSDT BTCUSDT ETHUSDT XRPUSDT SOLUSDT DOGEUSDT USDM
 coins = ["ADAUSDT", "BTCUSDT"]
+
 
 # Function to log exceptions to a text file
 def log_exception(exception):
@@ -24,6 +26,7 @@ def log_exception(exception):
         log_file.write(f"{datetime.now()} - {exception}\n")
         traceback.print_exc(file=log_file)
         log_file.write("\n\n")
+
 
 # Function to print zip file names
 def print_zip_files(directory):
@@ -38,8 +41,10 @@ def print_zip_files(directory):
         log_exception(f"Error while processing {directory}: {e}")
         return []
 
+
 def find_closest_aggr_trade_timestamp(aggr_df, closetime):
     return aggr_df['transact_time'].iloc[(aggr_df['transact_time'] - closetime).abs().idxmin()]
+
 
 def extract_and_insert_trades_historical(aggr_zip_file, klines_zip_file, coin, connection, cursor):
     try:
@@ -59,7 +64,9 @@ def extract_and_insert_trades_historical(aggr_zip_file, klines_zip_file, coin, c
             # Extract relevant Aggr Trades data
             aggr_data = aggr_df.loc[aggr_df['transact_time'] == timestamp].iloc[0]
             symbol = coin
-            side = "Buy" if aggr_data['is_buyer_maker'] == 'True' else "Sell"
+            dummy = aggr_data['is_buyer_maker']
+            print(type(dummy))
+            side = "BUY" if dummy == np.bool_(True) else "SELL"
             sizequote = float(aggr_data['quantity'])
             opentime = int(kline_row.loc['open_time'])
             lowprice = kline_row.loc['low']
@@ -70,39 +77,14 @@ def extract_and_insert_trades_historical(aggr_zip_file, klines_zip_file, coin, c
 
             market = "LINEAR"
             exchange = "BINANCE"
-        #     -------------+------------------------+-----------+----------+--------------------
-        #     id | uuid | |
-        #     not null | uuid_generate_v4()
-        #     timestamp | bigint | | |
-        #     symbol | character
-        #     varying(255) | | |
-        #     side | character
-        #     varying(255) | | |
-        #     sizequote | double
-        #     precision | | |
-        #     opentime | bigint | | |
-        #     closetime | bigint | | |
-        #     lowprice | double
-        #     precision | | |
-        #     highprice | double
-        #     precision | | |
-        #     openprice | double
-        #     precision | | |
-        #     closeprice | double
-        #     precision | | |
-        #     volumequote | double
-        #     precision | | |
-        #     market | character
-        #     varying(255) | | |
-        #     exchange | character
-        #     varying(255) | | |
             insert_query = f"INSERT INTO TradesHistorical (timestamp, symbol, side, sizequote, opentime, closetime, lowprice, highprice, openprice, closeprice, volumequote, market, exchange) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(insert_query, (
                 timestamp, symbol, side, sizequote, opentime, closetime, lowprice, highprice, openprice, closeprice,
                 volumequote, market, exchange))
 
         connection.commit()
-        print(f"Successfully extracted and inserted contents from Aggr Trades: {aggr_zip_file} and Klines: {klines_zip_file}")
+        print(
+            f"Successfully extracted and inserted contents from Aggr Trades: {aggr_zip_file} and Klines: {klines_zip_file}")
     except Exception as e:
         log_exception(f"Error while extracting and inserting data: {e}")
 
@@ -128,7 +110,6 @@ for coin in coins:
     # Assuming the ZIP files are in the same order for Aggr Trades and Klines
     for aggr_zip_file, klines_zip_file in zip(aggr_zip_files, klines_zip_files):
         extract_and_insert_trades_historical(aggr_zip_file, klines_zip_file, coin, connection, cursor)
-
 
 # Close the cursor and connection after all data is processed
 cursor.close()
