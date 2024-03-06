@@ -65,7 +65,7 @@ def extract_and_insert_trades_historical(aggr_zip_file, klines_zip_file, coin, c
             aggr_data = aggr_df.loc[aggr_df['transact_time'] == timestamp].iloc[0]
             symbol = coin
             dummy = aggr_data['is_buyer_maker']
-            print(type(dummy))
+            # print(type(dummy))
             side = "BUY" if dummy == np.bool_(True) else "SELL"
             sizequote = float(aggr_data['quantity'])
             opentime = int(kline_row.loc['open_time'])
