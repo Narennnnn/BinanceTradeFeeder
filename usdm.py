@@ -9,14 +9,15 @@ import numpy as np
 # Connection details
 host = "localhost"
 port = "5432"
-user = "postgres"
-password = "pass"
-database = "postgres"
+user = "naren"
+password = "naren"
+database = "exchanges_data"
 table_name = "TradesHistorical"
-# base_directory is where I have downloaded zip locally from date 25 feb to 28 feb for testing using Binance-Public-Data repo
-base_directory = r"D:\Tonnochy\binance-public-data\python\data\futures\um\daily"
+
+
+base_directory = r"/home/naren/binance-public-data/python/data/futures/um/daily"
 # List of coins we need to these also ADAUSDT BTCUSDT ETHUSDT XRPUSDT SOLUSDT DOGEUSDT USDM
-coins = ["ADAUSDT", "BTCUSDT"]
+coins = ["ADAUSDT", "BTCUSDT", "ETHUSDT", "XRPUSDT", "SOLUSDT", "DOGEUSDT"]
 
 
 # Function to log exceptions to a text file
