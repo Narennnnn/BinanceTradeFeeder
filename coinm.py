@@ -13,9 +13,9 @@ password = "naren"
 database = "exchanges_data"
 table_name = "TradesHistorical"
 
-base_directory = r"/home/naren/binance-public-data/python/data/futures/um/daily"
-coins = ["BTCUSD_PERP", "ETHUSD_PERP", "LINKUSD_PERP", "BNBUSD_PERP", "TRXUSD_PERP", "DOTUSD_PERP", "ADAUSD_PERP", "XRPUSD_PERP"]
 
+base_directory = r"/home/naren/binance-public-data/python/data/futures/cm/daily"
+coins = ["BTCUSD_PERP", "ETHUSD_PERP", "LINKUSD_PERP", "BNBUSD_PERP", "TRXUSD_PERP" ,"DOTUSD_PERP", "ADAUSD_PERP", "XRPUSD_PERP"]
 
 
 # Function to log exceptions to a text file
